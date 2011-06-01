@@ -1,0 +1,143 @@
+#!/bin/bash
+#           altında çocuklar gibi şendik
+#     kitty - yet another pisi front end that inspired by blinky
+#     copyright (c) 2011 Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>
+#
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License along
+#     with this program; if not, write to the Free Software Foundation, Inc.,
+#     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+SUDO=$(kde4-config --path libexec)kdesu
+
+TERMINAL=konsole
+
+# Set execution flag
+# kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --passivepopup "action completed."
+# --noclose -e bash -c
+TEXE="$TERMINAL --noclose -e"
+# TEXE="$TERMINAL -e"
+
+# Less typing for me. :-)
+WHICH='type -fpP'
+
+KITTY_VER=0.1
+PISI_VER=`pisi --version | cut -f 2 -d' '`
+PARDUS_VER=`cat /etc/pardus-release | cut -f 2 -d' '`
+
+
+# Make sure deps exist and set vars.
+if $WHICH kdialog &>/dev/null; then
+    KDIALOG=`which kdialog`
+else
+    echo "`date` - KDialog not found!"
+    exit 1
+fi
+if $WHICH pisi &>/dev/null; then
+    PISI=`type -p pisi`
+else
+    echo "`date` - PiSi not found!"
+    exit 1
+fi
+
+
+check_errs() {
+    if [ "${1}" -ne "0" ]; then
+           echo "ERROR ${1} : ${2}"
+           exit ${1}
+    fi
+}
+
+kdialog --dontagain kitty:danger --msgbox "kitty is a dangerous tool!\nIt can eat your computer alive and no one will be able to repair it again.\nIt's a great pity." --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
+
+main_menu() {
+MAIN_MENU=`kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "Please select an action from the list below" "install package" "remove package" "package info" "update repositories" "add repo" "about"`
+
+if [ -n "${MAIN_MENU}" ];then
+    case "${MAIN_MENU}" in
+    "install package")
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "install package:" `pisi ls | cut -f 1 -d' '` > /tmp/kitty-install.txt
+    PACKAGES=`cat /tmp/kitty-install.txt`
+    if [ "${PACKAGES}" != '' ]; then
+           echo "`date` - installing the following packages: $PACKAGES"
+           $SUDO $TEXE $PISI em -y $PACKAGES
+    fi
+    main_menu
+    ;;
+
+    "remove package")
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "remove package:" `pisi li -b localhost | cut -f 1 -d' '` > /tmp/kitty-install.txt
+    PACKAGES=`cat /tmp/kitty-install.txt`
+    if [ "${PACKAGES}" != '' ]; then
+           echo "`date` - removing the following packages: $PACKAGES"
+           $SUDO $TEXE $PISI rm $PACKAGES
+    fi
+    main_menu
+    ;;
+
+    "update repositories")
+    $SUDO $TEXE $PISI ur
+    main_menu
+    ;;
+
+    "package info")
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "package info:" `pisi ls | cut -f 1 -d' '` > /tmp/kitty-install.txt
+    PACKAGES=`cat /tmp/kitty-install.txt`
+    # $TEXE $PISI info $PACKAGES
+    xdg-open http://code.google.com/p/happy-kitty/wiki/$PACKAGES
+    main_menu
+    ;;
+
+    "add repo")
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "add repo:" "happy-kitty" "mnurolcay" "other" > /tmp/kitty-install.txt
+    PACKAGES=`cat /tmp/kitty-install.txt`
+    if [ -n "${PACKAGES}" ];then
+        case "${PACKAGES}" in
+        "happy-kitty")
+        $SUDO $TEXE $PISI ar $PACKAGES http://happy-kitty.googlecode.com/svn/trunk/pisi-index.xml.xz
+        ;;
+        "mnurolcay")
+        $SUDO $TEXE $PISI ar $PACKAGES http://svn.pardus.org.tr/pardus/playground/mnurolcay/2011/pisi-index.xml.xz
+        ;;
+        "other")
+        # adding pardus-2009 if not given name and address?
+        $SUDO $TEXE $PISI ar `kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --inputbox "repository name:"` `kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --inputbox "repository address:"`
+        ;;
+        esac
+    fi
+    main_menu
+    ;;
+    "about")
+    kdialog --msgbox "kitty is a simple front end for pisi.\nEspecially aims to provide an easier way to\ninstall packages from source repositories.\nUse at your own risk.\nGood luck.\n\n\nVersion $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>\nPiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>\nPardus version $PARDUS_VER." --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
+    main_menu
+    ;;
+    esac
+fi
+}
+
+
+if [ -n "$1" ];then
+    case "$1" in
+    "-h" | "--help" | "-help" | "-v" | "-V" | "--version" | "-version")
+    echo "kitty - pisi front end"
+    echo "Version $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>"
+    echo "PiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>"
+    echo "Pardus version $PARDUS_VER."
+    exit 0
+    ;;
+    *)
+
+    ;;
+    esac
+fi
+
+main_menu
