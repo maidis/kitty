@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=kitty
+GenericName=PiSi Front End
+GenericName[tr]=PiSi Ön Yüzü
+Comment=A simple front end for PiSi
+Comment[tr]=PiSi için basit bir ön yüz
+Icon=kitty
+Exec=kitty
+Terminal=false
+StartupNotify=false
+Categories=Application;System;
