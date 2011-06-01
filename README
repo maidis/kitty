@@ -1,1 +1,3 @@
 kitty is a simple front end for pisi. Especially aims to provide an easier way to install packages from source repositories. Use at your own risk and good luck.
+
+Inspired by blinky: https://github.com/hunterm/blinky
