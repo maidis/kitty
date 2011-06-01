@@ -32,7 +32,7 @@ WHICH='type -fpP'
 
 KITTY_VER=0.1
 PISI_VER=`pisi --version | cut -f 2 -d' '`
-PARDUS_VER=`cat /etc/pardus-release | cut -f 2 -d' '`
+PARDUS_VER=`cat /etc/pardus-release | cut -f1 --complement -d' '`
 
 
 # Make sure deps exist and set vars.
@@ -117,7 +117,7 @@ if [ -n "${MAIN_MENU}" ];then
     main_menu
     ;;
     "about")
-    kdialog --msgbox "kitty is a simple front end for pisi.\nEspecially aims to provide an easier way to\ninstall packages from source repositories.\nUse at your own risk.\nGood luck.\n\n\nVersion $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>\nPiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>\nPardus version $PARDUS_VER." --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
+    kdialog --msgbox "kitty is a simple front end for pisi.\nEspecially aims to provide an easier way to\ninstall packages from source repositories.\nUse at your own risk.\nGood luck.\n\n\nVersion $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>\nPiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>\nPardus version: $PARDUS_VER" --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
     main_menu
     ;;
     esac
@@ -131,7 +131,7 @@ if [ -n "$1" ];then
     echo "kitty - pisi front end"
     echo "Version $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>"
     echo "PiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>"
-    echo "Pardus version $PARDUS_VER."
+    echo "Pardus version: $PARDUS_VER"
     exit 0
     ;;
     *)
