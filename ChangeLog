@@ -1,0 +1,11 @@
+0.2
+---
+* Fixed Pardus versioning issue (works for Beta, Alfa etc. two words version) 
+* Added more documents (AUTHORS, BUGS, ChangeLog)
+* Added an action to enable / disable ccache
+
+0.1
+---
+* Yet another crazy project by maidis
+
+https://github.com/maidis/kitty/commits/master
