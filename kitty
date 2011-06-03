@@ -30,7 +30,7 @@ TEXE="$TERMINAL --noclose -e"
 # Less typing for me. :-)
 WHICH='type -fpP'
 
-KITTY_VER=0.1
+KITTY_VER=0.2
 PISI_VER=`pisi --version | cut -f 2 -d' '`
 PARDUS_VER=`cat /etc/pardus-release | cut -f1 --complement -d' '`
 
@@ -60,7 +60,7 @@ check_errs() {
 kdialog --dontagain kitty:danger --msgbox "kitty is a dangerous tool!\nIt can eat your computer alive and no one will be able to repair it again.\nIt's a great pity." --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
 
 main_menu() {
-MAIN_MENU=`kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "Please select an action from the list below" "install package" "remove package" "package info" "update repositories" "add repo" "about"`
+MAIN_MENU=`kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "Please select an action from the list below" "install package" "remove package" "package info" "update repositories" "add repo" "ccache usage" "about"`
 
 if [ -n "${MAIN_MENU}" ];then
     case "${MAIN_MENU}" in
@@ -116,6 +116,27 @@ if [ -n "${MAIN_MENU}" ];then
     fi
     main_menu
     ;;
+
+    "ccache usage")
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "ccache usage:" "enable ccache" "disable ccache" > /tmp/kitty-install.txt
+    PACKAGES=`cat /tmp/kitty-install.txt`
+    if [ -n "${PACKAGES}" ];then
+        case "${PACKAGES}" in
+        "enable ccache")
+        $SUDO sed -i s/'# buildhelper = None'/'buildhelper = ccache'/ /etc/pisi/pisi.conf
+        kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --passivepopup "ccache enabled."
+        echo "`date` - ccache enabled."
+        ;;
+        "disable ccache")
+        $SUDO sed -i s/'buildhelper = ccache'/'# buildhelper = None'/ /etc/pisi/pisi.conf
+        kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --passivepopup "ccache disabled."
+        echo "`date` - ccache disabled."
+        ;;
+        esac
+    fi
+    main_menu
+    ;;
+
     "about")
     kdialog --msgbox "kitty is a simple front end for pisi.\nEspecially aims to provide an easier way to\ninstall packages from source repositories.\nUse at your own risk.\nGood luck.\n\n\nVersion $KITTY_VER, created by Anıl Özbek (a.k.a. maidis) <ozbekanil [at] gmail.com>\nPiSi version $PISI_VER, maintaining by Fatih Aşıcı <fatih [at] pardus.org.tr>\nPardus version: $PARDUS_VER" --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
     main_menu
