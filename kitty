@@ -119,7 +119,7 @@ if [ -n "${MAIN_MENU}" ];then
     ;;
 
     "ccache usage")
-    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "ccache usage:" "enable ccache" "disable ccache" > /tmp/kitty-install.txt
+    kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "ccache usage:" "enable ccache" "disable ccache" "delete ccache cache" > /tmp/kitty-install.txt
     PACKAGES=`cat /tmp/kitty-install.txt`
     if [ -n "${PACKAGES}" ];then
         case "${PACKAGES}" in
@@ -132,6 +132,10 @@ if [ -n "${MAIN_MENU}" ];then
         $SUDO sed -i s/'buildhelper = ccache'/'# buildhelper = None'/ /etc/pisi/pisi.conf
         kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --passivepopup "ccache disabled."
         echo "`date` - ccache disabled."
+        ;;
+        "delete ccache cache")
+        $SUDO $TEXE ccache --clear --zero-stats
+        echo "`date` - ccache cache deleted."
         ;;
         esac
     fi

@@ -1,6 +1,8 @@
 0.3
 ---
-
+* Added an action to delete pisi cache
+* Added an action to delete ccache cache
+* 
 
 0.2
 ---
