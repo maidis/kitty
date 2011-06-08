@@ -1,6 +1,10 @@
+0.3
+---
+
+
 0.2
 ---
-* Fixed Pardus versioning issue (works for Beta, Alfa etc. two words version) 
+* Fixed Pardus versioning issue (works for Beta, Alfa etc. two words version)
 * Added more documents (AUTHORS, BUGS, ChangeLog)
 * Added an action to enable / disable ccache
 

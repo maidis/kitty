@@ -1,1 +1,4 @@
+* Some users report that following command doesn't wotk on stable repository:
+  $(kde4-config --path libexec)kdesu konsole -e echo hede
+
 https://github.com/maidis/kitty/issues

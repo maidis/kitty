@@ -60,7 +60,7 @@ check_errs() {
 kdialog --dontagain kitty:danger --msgbox "kitty is a dangerous tool!\nIt can eat your computer alive and no one will be able to repair it again.\nIt's a great pity." --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end"
 
 main_menu() {
-MAIN_MENU=`kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "Please select an action from the list below" "install package" "remove package" "package info" "update repositories" "add repo" "ccache usage" "about"`
+MAIN_MENU=`kdialog --icon "utilities-file-archiver" --caption "kitty: pisi front end" --title "kitty: pisi front end" --combobox "Please select an action from the list below" "install package" "remove package" "package info" "update repositories" "add repo" "ccache usage" "delete cache" "about"`
 
 if [ -n "${MAIN_MENU}" ];then
     case "${MAIN_MENU}" in
@@ -86,6 +86,7 @@ if [ -n "${MAIN_MENU}" ];then
 
     "update repositories")
     $SUDO $TEXE $PISI ur
+    echo "`date` - repositories updated"
     main_menu
     ;;
 
@@ -134,6 +135,12 @@ if [ -n "${MAIN_MENU}" ];then
         ;;
         esac
     fi
+    main_menu
+    ;;
+
+    "delete cache")
+    $SUDO $TEXE $PISI dc
+    echo "`date` - cache deleted."
     main_menu
     ;;
 
