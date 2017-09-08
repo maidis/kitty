@@ -4,6 +4,8 @@
 
 ![kitty screenshot](http://i.imgur.com/lbx1HQw.png)
 
+**NOTE:** kitty is no longer being actively developed.
+
 ## used tools
 
 ### PiSi
